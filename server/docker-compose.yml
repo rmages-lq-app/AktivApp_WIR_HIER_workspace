@@ -1,0 +1,88 @@
+version: "3.8"
+services:
+    node1:
+        restart: unless-stopped
+        build:
+            context: ./nodeJS
+        ports:
+            - "3000:3000"
+        volumes: 
+            - /data/uploads/:/uploads
+            - /data/logs/nodejs/:/var/log/node  
+        depends_on: 
+            - db
+        environment:
+            - NODE_ENV=production
+            - PORT=3000
+    node2:
+        restart: unless-stopped
+        build:
+            context: ./nodeJS
+        ports:
+            - "3001:3001"
+        volumes: 
+            - /data/uploads/:/uploads
+            - /data/logs/nodejs/:/var/log/node  
+        depends_on: 
+            - db
+        environment:
+            - NODE_ENV=production
+            - PORT=3001
+    node3: 
+        restart: unless-stopped
+        build: 
+            context: ./nodeJS
+        ports: 
+            - "3002:3002"
+        volumes: 
+            - /data/uploads/:/uploads
+            - /data/logs/nodejs/:/var/log/node  
+        depends_on:
+            - db
+        environment:
+            - NODE_ENV=production
+            - PORT=3002
+    node4:
+        restart: unless-stopped
+        build:
+            context: ./nodeJS
+        ports:
+            - "3003:3003"
+        volumes: 
+            - /data/uploads/:/uploads
+            - /data/logs/nodejs/:/var/log/node       
+        depends_on:
+            - db
+        environment:
+            - NODE_ENV=production
+            - PORT=3003
+    nginx:
+        restart: unless-stopped
+        build:
+            context: ./nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes: 
+            - /data:/data
+            - /etc/letsencrypt/archive/app.lebensqualitaet-burgrieden.de/:/etc/nginx/certs
+            - /data/logs/nginx/:/var/log/nginx
+        depends_on:
+            - node1
+            - node2
+            - node3
+            - node4
+    db: 
+        image: mysql:8.0
+        restart: unless-stopped
+        ports:
+            - '3306:3306'
+        expose:
+            - '3306'
+        volumes:
+            - db-data:/var/lib/mysql
+            - /data/db/backup/:/data_backup/data
+            - /data/logs/mysql/:/var/log/mysql
+            - /data/config/conf.d/:/etc/mysql/conf.d
+volumes: 
+    db-data:
