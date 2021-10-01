@@ -60,6 +60,13 @@ class EventProvider extends ChangeNotifier {
     return loaded.values.toList();
   }
 
+  /// Gibt den Beschreibungstext einer Veranstaltung zurück
+  getEventDescription(int id) {
+    String sDesc = "Keine Beschreibung gefunden!";
+
+    return sDesc;
+  }
+
   /// Löscht ein Event, falls es geladen ist
   void removeEventIfLoaded(int id) {
     if (loaded.containsKey(id)) {
@@ -674,7 +681,7 @@ class EventProvider extends ChangeNotifier {
 
     if (json['istGenehmigt'].toString() != "1")
       log("Nicht genehmigte Veranstaltung geladen. (id: " +
-          id.toString() +
+          id.toString() + " - " + json['title'].toString() +
           ")");
 
     if (json['entfernung'] != null)

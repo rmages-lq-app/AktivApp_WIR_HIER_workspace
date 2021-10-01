@@ -4,14 +4,19 @@ import 'package:aktiv_app_flutter/Provider/event_provider.dart';
 import 'package:aktiv_app_flutter/Provider/user_provider.dart';
 import 'package:aktiv_app_flutter/Views/defaults/color_palette.dart';
 import 'package:aktiv_app_flutter/Views/defaults/error_preview_box.dart';
+import 'package:aktiv_app_flutter/Views/veranstaltung/anlegen.dart';
 import 'package:aktiv_app_flutter/components/rounded_button.dart';
+import 'package:aktiv_app_flutter/components/rounded_input_field_beschreibung.dart';
 import 'package:aktiv_app_flutter/util/rest_api_service.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+final controllerBeschreibung = TextEditingController();
 
 // ignore: must_be_immutable
 class VeranstaltungDetailView extends StatefulWidget {
@@ -25,7 +30,6 @@ class VeranstaltungDetailView extends StatefulWidget {
 }
 
 class _VeranstaltungDetailViewState extends State<VeranstaltungDetailView> {
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -50,7 +54,15 @@ class _VeranstaltungDetailViewState extends State<VeranstaltungDetailView> {
               veranstaltung.erstellerId == UserProvider.userId ||
                   Provider.of<UserProvider>(context, listen: false)
                           .rolle
-                          .toLowerCase() == "betreiber";
+                          .toLowerCase() ==
+                      "betreiber";
+
+          bool offerToChange =
+              veranstaltung.erstellerId == UserProvider.userId ||
+                  Provider.of<UserProvider>(context, listen: false)
+                          .rolle
+                          .toLowerCase() ==
+                      "user";
 
           String tags = "";
           for (int i = 0; i < veranstaltung.selectedTags.length; i++) {
@@ -359,6 +371,43 @@ class _VeranstaltungDetailViewState extends State<VeranstaltungDetailView> {
                                     thickness: 2,
                                   ),
                                 ),
+                                Visibility(
+                                    visible: offerToChange,
+                                    child: RoundedButton(
+                                      text: "Veranstaltung ändern",
+                                      color: ColorPalette.malibu.rgb,
+                                      press: () async {
+                                        if (await confirm(
+                                          context,
+                                          title: Text("Bestätigung"),
+                                          content: Text(
+                                              "Veranstaltungstext ändern?"),
+                                          textOK: Text(
+                                            "Text",
+                                            style: TextStyle(
+                                                color:
+                                                    ColorPalette.dark_grey.rgb),
+                                          ),
+                                          textCancel: Text(
+                                            "Abbrechen",
+                                            style: TextStyle(
+                                                color:
+                                                    ColorPalette.endeavour.rgb),
+                                          ),
+                                        )) {
+                                          await Provider.of<UserProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .veranstaltungChange(
+                                                  veranstaltung.id.toString(),
+                                                  "Test");
+
+                                          Provider.of<BodyProvider>(context,
+                                                  listen: false)
+                                              .previousBody(context);
+                                           }
+                                      },
+                                    )),
                                 Visibility(
                                     visible: offerToDelete,
                                     child: RoundedButton(

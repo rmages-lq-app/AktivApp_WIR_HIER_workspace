@@ -87,35 +87,35 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
     bool plzcheck = await attemptProovePlz(plz);
     if (titel.length == 0)
     {
-      FNtitel.requestFocus();
+      fnTitel.requestFocus();
       return "Titel fehlt";
     }
     if (beschreibung.length == 0) {
-      FNbeschreibung.requestFocus();
+      fnBeschreibung.requestFocus();
       return "Beschreibung fehlt";
     }
     if (email.length == 0) {
-      FNemail.requestFocus();
+      fnEmail.requestFocus();
       return "Kontakt ( Email Adresse ) fehlt";
     }
     if (plz.length != 5) {
-      FNplz.requestFocus();
+      fnPlz.requestFocus();
       return "PLZ Eingabe ungültig";
     }
     if (adresse.length == 0) {
-      FNadresse.requestFocus();
+      fnAdresse.requestFocus();
       return "Adresse fehlt";
     }
     if (plzcheck == false) {
-      FNplz.requestFocus();
+      fnPlz.requestFocus();
       return "PLZ Eingabe ungültig";
     }
     if (start.contains('Beginn')) {
-      FNstart.requestFocus();
+      fnStart.requestFocus();
       return "Startzeitpunkt fehlt";
     }
     if (ende.contains('Ende')) {
-      FNende.requestFocus();
+      fnEnde.requestFocus();
       return "Endzeitpunkt fehlt";
     }
     if (institutionen.keys.length > 1 && institutionsId == 0) {
@@ -127,11 +127,11 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
   Future<String> checkDataStep1(String titel, String beschreibung) async {
     if (titel.length == 0)
     {
-      FNtitel.requestFocus();
+      fnTitel.requestFocus();
       return "Titel fehlt";
     }
     if (beschreibung.length == 0) {
-      FNbeschreibung.requestFocus();
+      fnBeschreibung.requestFocus();
       return "Beschreibung fehlt";
     }
     return 'OK';
@@ -142,27 +142,27 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
     bool plzcheck = await attemptProovePlz(plz);
 
     if (email.length == 0) {
-      FNemail.requestFocus();
+      fnEmail.requestFocus();
       return "Kontakt ( Email Adresse ) fehlt";
     }
     if (plz.length != 5) {
-      FNplz.requestFocus();
+      fnPlz.requestFocus();
       return "PLZ Eingabe ungültig";
     }
     if (adresse.length == 0) {
-      FNadresse.requestFocus();
+      fnAdresse.requestFocus();
       return "Adresse fehlt";
     }
     if (plzcheck == false) {
-      FNplz.requestFocus();
+      fnPlz.requestFocus();
       return "PLZ Eingabe ungültig";
     }
     if (start.contains('Beginn')) {
-      FNstart.requestFocus();
+      fnStart.requestFocus();
       return "Startzeitpunkt fehlt";
     }
     if (ende.contains('Ende')) {
-      FNende.requestFocus();
+      fnEnde.requestFocus();
       return "Endzeitpunkt fehlt";
     }
     return 'OK';
@@ -263,35 +263,35 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
     return institutionen;
   }
 
-  FocusNode FNtitel;
-  FocusNode FNbeschreibung;
-  FocusNode FNemail;
-  FocusNode FNplz;
-  FocusNode FNadresse;
-  FocusNode FNstart;
-  FocusNode FNende;
+  FocusNode fnTitel;
+  FocusNode fnBeschreibung;
+  FocusNode fnEmail;
+  FocusNode fnPlz;
+  FocusNode fnAdresse;
+  FocusNode fnStart;
+  FocusNode fnEnde;
 
   @override
   void initState() {
     super.initState();
-    FNtitel = FocusNode();
-    FNbeschreibung = FocusNode();
-    FNemail = FocusNode();
-    FNplz = FocusNode();
-    FNadresse = FocusNode();
-    FNstart = FocusNode();
-    FNende = FocusNode();
+    fnTitel = FocusNode();
+    fnBeschreibung = FocusNode();
+    fnEmail = FocusNode();
+    fnPlz = FocusNode();
+    fnAdresse = FocusNode();
+    fnStart = FocusNode();
+    fnEnde = FocusNode();
   }
 
   @override
   void dispose() {
-    FNtitel.dispose();
-    FNbeschreibung.dispose();
-    FNemail.dispose();
-    FNplz.dispose();
-    FNadresse.dispose();
-    FNstart.dispose();
-    FNende.dispose();
+    fnTitel.dispose();
+    fnBeschreibung.dispose();
+    fnEmail.dispose();
+    fnPlz.dispose();
+    fnAdresse.dispose();
+    fnStart.dispose();
+    fnEnde.dispose();
     super.dispose();
   }
 
@@ -383,14 +383,14 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
                                       hintText: "Titel",
                                       icon: Icons.title,
                                       controller: controllerTitel,
-                                      fnNode: FNtitel,
+                                      fnNode: fnTitel,
                                     ),
                                   ),
                                   RoundedInputFieldBeschreibung(
                                     hintText: 'Beschreibung der Veranstaltung',
                                     icon: Icons.edit,
                                     controller: controllerBeschreibung,
-                                    fnNode: FNbeschreibung,
+                                    fnNode: fnBeschreibung,
                                   ),
                                   RoundedInputFieldSuggestions(
                                     controller: _controller,
@@ -474,25 +474,25 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
                                     hintText: "eMail",
                                     icon: Icons.email,
                                     controller: controlleremail,
-                                    fnNode: FNemail,
+                                    fnNode: fnEmail,
                                   ),
                                   RoundedInputFieldNumeric(
                                     hintText: "Postleitzahl",
                                     controller: controllerPlz,
                                     icon: Icons.home,
-                                    fnNode: FNplz,
+                                    fnNode: fnPlz,
                                   ),
                                   RoundedInputField(
                                     hintText: "Adresse",
                                     icon: Icons.location_on_rounded,
                                     controller: controllerAdresse,
-                                    fnNode: FNadresse,
+                                    fnNode: fnAdresse,
                                   ),
                                   RoundedDatepickerButton(
                                     text: starttext,
                                     color: ColorPalette.malibu.rgb,
                                     textColor: Colors.black54,
-                                    fnNode: FNstart,
+                                    fnNode: fnStart,
                                     press: () async {
                                       currentDate = DateTime.now();
                                       currentTime = TimeOfDay.now();
@@ -568,7 +568,7 @@ class _VeranstaltungAnlegenViewState extends State<VeranstaltungAnlegenView> {
                                     text: endtext,
                                     color: ColorPalette.malibu.rgb,
                                     textColor: Colors.black54,
-                                    fnNode: FNende,
+                                    fnNode: fnEnde,
                                     press: () async {
                                       currentDate =
                                           DateTime.parse(start);

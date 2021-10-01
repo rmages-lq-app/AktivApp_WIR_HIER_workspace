@@ -454,6 +454,17 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  //Ändern einer Veranstaltung
+  veranstaltungChange(String id, String beschreibung) async {
+    var eventChange = await attemptChangeVeranstaltung(
+        id, await getAccessToken(), beschreibung);
+    if (eventChange != null) {
+      return eventChange;
+    } else {
+      return null;
+    }
+  }
+
   //Löschen eines Nutzers
   deleteUser(String mail) async {
     var userToDelete = await attemptGetUser(mail);
