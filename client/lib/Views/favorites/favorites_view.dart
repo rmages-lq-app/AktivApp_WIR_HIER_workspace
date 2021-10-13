@@ -5,6 +5,8 @@ import 'package:aktiv_app_flutter/Views/defaults/event_preview_list.dart';
 import 'package:flutter/material.dart';
 import 'package:aktiv_app_flutter/Models/role_permissions.dart';
 import 'package:aktiv_app_flutter/Views/defaults/event_preview_box.dart';
+
+
 class FavoritesView extends StatefulWidget {
   @override
   _FavoritesViewState createState() => _FavoritesViewState();

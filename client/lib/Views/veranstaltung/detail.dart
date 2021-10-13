@@ -33,6 +33,7 @@ class _VeranstaltungDetailViewState extends State<VeranstaltungDetailView> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final _formKey = GlobalKey<FormState>();
 
     return FutureBuilder<Veranstaltung>(
         future: Provider.of<EventProvider>(context, listen: false)
@@ -377,38 +378,59 @@ class _VeranstaltungDetailViewState extends State<VeranstaltungDetailView> {
                                       text: "Veranstaltung ändern",
                                       color: ColorPalette.malibu.rgb,
                                       press: () async {
-                                        if (await confirm(
-                                          context,
-                                          title: Text("Bestätigung"),
-                                          content: Text(
-                                              "Veranstaltungstext ändern?"),
-                                          textOK: Text(
-                                            "Text",
-                                            style: TextStyle(
-                                                color:
-                                                    ColorPalette.dark_grey.rgb),
-                                          ),
-                                          textCancel: Text(
-                                            "Abbrechen",
-                                            style: TextStyle(
-                                                color:
-                                                    ColorPalette.endeavour.rgb),
-                                          ),
-                                        )) {
-                                          await Provider.of<UserProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .veranstaltungChange(
-                                                  veranstaltung.id.toString(),
-                                                  "Test");
+                                        String eventText = "";
+                                        return showDialog(
+                                          context: context,
+                                          barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Beschreibungstext anpassen'),
+                                              content: new Row(
+                                                children: [
+                                                  new Expanded(
+                                                      child: new TextField(
+                                                        autofocus: true,
+                                                        maxLines: 5,
+                                                        minLines: 5,
+                                                        decoration: new InputDecoration(
+                                                            labelText: 'Beschreibung', hintText: veranstaltung.beschreibung),
+                                                        onChanged: (value) {
+                                                          eventText = value;
+                                                        },
+                                                      ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        eventText =  eventText == "" ? veranstaltung.beschreibung : eventText;
 
-                                          Provider.of<BodyProvider>(context,
-                                                  listen: false)
-                                              .previousBody(context);
-                                           }
-                                      },
-                                    )),
-                                Visibility(
+                                                        Provider.of<UserProvider>(
+                                                            context,
+                                                            listen: false)
+                                                            .veranstaltungChange(
+                                                            veranstaltung.id.toString(),
+                                                            eventText);
+
+                                                        Provider.of<BodyProvider>(context,
+                                                            listen: false)
+                                                            .previousBody(context);
+
+                                                        Navigator.pop(context, true);
+                                                        //Navigator.of(context).pop(context);
+                                                      },
+                                                      child: const Text('Übernehmen'),
+                                                    )
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    )
+                                   ),
+                                  Visibility(
                                     visible: offerToDelete,
                                     child: RoundedButton(
                                       text: "Veranstaltung löschen",

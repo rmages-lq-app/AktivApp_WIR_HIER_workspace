@@ -4,6 +4,7 @@ var express = require("express");
 var router = express.Router();
 const passport = require("passport");
 
+
 // [GET] bekomme tags (optional gefiltert)
 router.get("/tags", async function (req, res) {
   const tag = req.query.tag;
@@ -123,7 +124,7 @@ router.post(
     }
 
     const result = await veranstaltungService.genehmigeVeranstaltung(
-      veranstaltungId
+        veranstaltungId
     );
 
     if (result.error) {
@@ -134,12 +135,32 @@ router.post(
   }
 );
 
+// [POST] change beschreibung einer Veranstaltung
+router.post("/:veranstaltungId/beschreibung",
+    passport.authenticate("jwt", { session: false }),
+    async function (req, res) {
+        const veranstaltungId = req.params.veranstaltungId;
+        let beschreibung = req.body.beschreibung;
+
+        const result = await veranstaltungService.changeVeranstaltungsBeschreibung(
+        veranstaltungId,
+        beschreibung
+      );
+
+      if (result.error) {
+        return res.send(result);
+      } else {
+        return res.send(result);
+      }
+
+    }
+);
+
 // [GET] bekomme alle Veranstaltung
 router.get("/*", async function (req, res) {
   const latitudeUlm = 48.39962;
   const longitudeUlm = 9.99661;
   const sortsErlaubt = ["beginn_ts", "entfernung"];
-
   const query = req.query;
   let page = query.page;
   let bis = query.bis;

@@ -249,6 +249,54 @@ Future<bool> attemptProovePlz(String plz) async {
   return false;
 }
 
+// [POST] Genehmige einzelne Institution
+Future<http.Response> attemptApproveInstitution(
+    String institutionId, String accessToken) async {
+  String route = "api/institutionen/" + institutionId + "/genehmigen";
+  Map<String, dynamic> qParams = {'secret_token': accessToken};
+
+  final response = await http.post(Uri.https(SERVER_IP, route, qParams),
+      headers: <String, String>{
+        'Content-Type': "application/x-www-form-urlencoded"
+      },
+      body: {},
+      encoding: Encoding.getByName("utf-8"));
+
+  if (response.statusCode == 200) {
+    print("Institution erfolgreich genehmigt");
+  } else {
+    print(response.statusCode);
+  }
+
+  return response;
+}
+
+// [POST] Änderung einer Veranstaltung
+Future<http.Response> attemptChangeVeranstaltung(
+    String veranstaltungId,
+    String accessToken,
+    String beschreibung
+    ) async {
+  String route = "api/veranstaltungen/" + veranstaltungId + "/beschreibung";
+  Map<String, dynamic> qParams = {'secret_token': accessToken};
+  Map<String, dynamic> body = {'beschreibung': beschreibung};
+print("Route: " + route);
+  final response = await http.post(Uri.https(SERVER_IP, route, qParams),
+      headers: <String, String>{
+        'Content-Type': "application/x-www-form-urlencoded"
+      },
+      body: body,
+      encoding: Encoding.getByName("utf-8"));
+
+  if (response.statusCode == 200) {
+    print("Veranstaltung: " + veranstaltungId.toString() + " erfolgreich geändert");
+  } else {
+    print("Veranstaltungen ErrorCode: " + response.statusCode.toString());// .statusCode.toString());
+  }
+
+  return response;
+}
+
 // [POST] Erstelle neue Veranstaltung
 Future<http.Response> attemptCreateVeranstaltung(
     String titel,
@@ -603,28 +651,6 @@ Future<http.Response> attemptNewImageForInstitution(
 
   if (response.statusCode == 200) {
     print("Hinterlege Profilbild für Institution erfolgreich");
-  } else {
-    print(response.statusCode);
-  }
-
-  return response;
-}
-
-// [POST] Genehmige einzelne Institution
-Future<http.Response> attemptApproveInstitution(
-    String institutionId, String accessToken) async {
-  String route = "api/institutionen/" + institutionId + "/genehmigen";
-  Map<String, dynamic> qParams = {'secret_token': accessToken};
-
-  final response = await http.post(Uri.https(SERVER_IP, route, qParams),
-      headers: <String, String>{
-        'Content-Type': "application/x-www-form-urlencoded"
-      },
-      body: {},
-      encoding: Encoding.getByName("utf-8"));
-
-  if (response.statusCode == 200) {
-    print("Institution erfolgreich genehmigt");
   } else {
     print(response.statusCode);
   }

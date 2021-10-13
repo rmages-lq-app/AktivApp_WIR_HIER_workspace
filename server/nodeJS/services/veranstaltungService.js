@@ -2,10 +2,12 @@ let Veranstaltung = require("../models/Veranstaltung").Veranstaltung;
 let conn = require("../db").getConnection();
 
 async function getVeranstaltungById(veranstaltungId) {
-  const query = `SELECT v.id, v.titel, v.beschreibung, v.kontakt, v.beginn_ts, v.ende_ts, v.ortBeschreibung, v.erstellt_ts, i.name AS institutionName, i.beschreibung AS institutBeschreibung, v.userId AS ersteller  FROM Veranstaltung v
+  const query = `SELECT v.id, v.titel, v.beschreibung, v.kontakt, v.beginn_ts, v.ende_ts, v.ortBeschreibung, v.erstellt_ts, i.name AS institutionName, i.beschreibung AS institutBeschreibung, v.userId AS ersteller, v.istGenehmigt  FROM Veranstaltung v
     LEFT JOIN Institution i ON v.institutionId = i.id
     WHERE v.id = ?
     LIMIT 10`;
+
+console.log("async function getVeranstaltungById");
 
   let result = await conn
     .query(query, [Number(veranstaltungId)])
@@ -27,6 +29,8 @@ async function getFavoritVeranstaltungenByUser(userId, limit, page) {
     WHERE v.istGenehmigt = 1 AND v.beginn_ts >= NOW()
     ORDER BY v.beginn_ts asc
     LIMIT ?,?`;
+
+console.debug("async function getFavoritVeranstaltungenByUser");
 
   let result = await conn
     .query(queryWithUserFavorites, [
@@ -50,6 +54,8 @@ async function getVeranstaltungFilesById(veranstaltungId) {
   INNER JOIN File f ON vf.fileId = f.id
   WHERE vf.veranstaltungId = ?`;
 
+console.debug("async function getVeranstaltungFilesById");
+
   let result = await conn
     .query(query, [Number(veranstaltungId)])
     .catch((error) => {
@@ -66,6 +72,8 @@ async function getVeranstaltungFilesById(veranstaltungId) {
 async function genehmigeVeranstaltung(veranstaltungId) {
   const query = `UPDATE Veranstaltung v SET v.istGenehmigt = 1 WHERE v.id = ?`;
 
+console.log("async function genehmigeVeranstaltung");
+
   let result = await conn
     .query(query, [Number(veranstaltungId)])
     .catch((error) => {
@@ -79,8 +87,27 @@ async function genehmigeVeranstaltung(veranstaltungId) {
   }
 }
 
+async function changeVeranstaltungsBeschreibung(veranstaltungId, beschreibung) {
+  const query = `UPDATE Veranstaltung v SET v.beschreibung = ? WHERE v.id = ?`;
+  const params = [beschreibung, Number(veranstaltungId)];
+
+  let result = await conn
+    .query(query, params)
+    .catch((error) => {
+      console.log(error);
+      return { error: "Fehler bei Db: change Veranstaltung" };
+    });
+  if (result) {
+    return result[0];
+  } else {
+    return { error: "Fehler bei Db: change Veranstaltung" };
+  }
+}
+
 async function deleteVeranstaltung(veranstaltungId) {
   const query = `DELETE FROM Veranstaltung v WHERE v.id = ?`;
+
+console.log("async function deleteVeranstaltung");
 
   let result = await conn
     .query(query, [Number(veranstaltungId)])
@@ -153,6 +180,7 @@ async function getVeranstaltungen(
   const datumParams = datum ? [datum, datum] : [bis];
   const plzParams = plz ? [plz] : [];
 
+console.log("async function getVeranstaltungen");
 
   if (userId !== 0) {
     results = await conn
@@ -281,7 +309,7 @@ async function createVeranstaltung(
     Number(istGenehmigt),
     plz,
   ];
-
+console.log("async function createVeranstaltung");
   let result = await conn.query(query, params).catch((error) => {
     console.log(error);
     return { error: "Fehler bei Db" };
@@ -395,6 +423,7 @@ async function isUserVeranstaltungErsteller(veranstaltungId, userId) {
 }
 
 module.exports = {
+  changeVeranstaltungsBeschreibung: changeVeranstaltungsBeschreibung,
   getVeranstaltungById: getVeranstaltungById,
   getVeranstaltungen: getVeranstaltungen,
   createVeranstaltung: createVeranstaltung,
